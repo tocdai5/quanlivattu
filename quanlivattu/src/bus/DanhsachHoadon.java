@@ -41,6 +41,18 @@ public class DanhsachHoadon {
 		}
 		return false;
 	}
+	
+	public void suahoadon(Hoadon hd , int index)
+	{
+		Hoadon newhd = listHD.get(index);
+		if(newhd != null)
+		{
+			newhd.setLoaihoadon(hd.getLoaihoadon());
+			newhd.setThanhtoan(hd.getThanhtoan());
+			newhd.setNguoinhan(hd.getNguoinhan());
+			qlhd.luuHoadonmoi(newhd);
+		}
+	}
 
 	
 	

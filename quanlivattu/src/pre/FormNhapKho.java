@@ -281,7 +281,6 @@ public class FormNhapKho extends JFrame {
 					Hoadon hd = dsHD.getByIndex(index);
 					suathongtinHoadon(hd);
 					suaduoimodel(index,hd);
-					
 				}
 
 			}
@@ -290,6 +289,13 @@ public class FormNhapKho extends JFrame {
 		contentPane.add(btsuahd);
 		
 		JButton btlammoi = new JButton("L\u00E0m M\u1EDBi");
+		btlammoi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				lammoitthongtin();
+				modelvattu.setRowCount(0);
+				xoatrangCthd();
+			}
+		});
 		btlammoi.setBounds(661, 125, 99, 56);
 		contentPane.add(btlammoi);
 		
@@ -716,14 +722,13 @@ public class FormNhapKho extends JFrame {
 	
 	private void lammoitthongtin() {
 		dateNgaynhap.setDate(new Date());
-		txtsochungtu.setText("");
 		txtsohoadon.setText("");
 		txtkhonhap.setText("");
 		txtnhacungcap.setText("");
 		txtdiachi.setText("");
-		cbloaihd.setSelectedItem("");
-		cbthanhtoan.setSelectedItem("");
-		cbnguoikt.setSelectedItem("");
+		cbloaihd.setSelectedItem("Ban lẻ");
+		cbthanhtoan.setSelectedItem("Tiền mặt");
+		cbnguoikt.setSelectedItem("tocdai");
 		txtnguoinhan.setText("");
 		txthdgc.setText("");
 	}
