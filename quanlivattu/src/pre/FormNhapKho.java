@@ -293,6 +293,7 @@ public class FormNhapKho extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				lammoitthongtin();
 				modelvattu.setRowCount(0);
+				setSochungtu();
 				xoatrangCthd();
 			}
 		});
