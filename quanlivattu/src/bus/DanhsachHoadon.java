@@ -1,34 +1,48 @@
 package bus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Hoadon;
 
+import quanly.QuanlyHoadon;
+
 public class DanhsachHoadon {
 	private List<Hoadon> listHD;
+	
+	private QuanlyHoadon qlhd = new QuanlyHoadon();
 
-	public DanhsachHoadon(List<Hoadon> listHD) {
+	public DanhsachHoadon() {
 		super();
-		this.listHD = listHD;
+		if(qlhd.getDanhsachHoadon() != null)
+		{
+			this.listHD = qlhd.getDanhsachHoadon();
+		}
+		else
+			listHD = new ArrayList<Hoadon>();
 	}
 	
-	public Hoadon getBySochungtu(String sct)
+	public Hoadon getByIndex(int index)
 	{
-		for(Hoadon hd : listHD)
-		{
-			if(hd.getSochungtu().contains(sct))
-				return hd;
-		}
-		return null;
+		return listHD.get(index);
 	}
 
 	public List<Hoadon> getListHD() {
 		return listHD;
 	}
-
-	public void setListHD(List<Hoadon> listHD) {
-		this.listHD = listHD;
+	
+	public boolean themHoadon(Hoadon hd)
+	{
+		if(!listHD.contains(hd) && hd.getChitiethoadons().size() != 0)
+		{
+			listHD.add(hd);
+			qlhd.themHoadon(hd);
+			return true;
+		}
+		return false;
 	}
+
+	
 	
 	
 }

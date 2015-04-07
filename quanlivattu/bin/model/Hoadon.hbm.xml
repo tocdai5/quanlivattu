@@ -41,7 +41,7 @@
         <property name="ghichu" type="string">
             <column name="Ghichu" length="50" />
         </property>
-        <set name="chitiethoadons" table="chitiethoadon" inverse="true" lazy="true" fetch="select">
+        <set name="chitiethoadons" table="chitiethoadon" inverse="false" lazy="false" cascade="all">
             <key>
                 <column name="Sochungtu"  />
             </key>

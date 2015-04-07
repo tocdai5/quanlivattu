@@ -84,7 +84,7 @@ public class VattuHome {
 		}
 	}
 
-	public Vattu findById(java.lang.String id) {	
+	public Vattu findById(int id) {	
 		try {
 			Session sess=VattuHome.getSessionFactory().openSession();
 			Vattu instance = (Vattu) sess.get("model.Vattu", id);

@@ -1,37 +1,45 @@
 package pre;
 
 import java.awt.EventQueue;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JTable;
-import javax.swing.JComboBox;
-
-import model.Hoadon;
-import dao.HoadonHome;
-import javax.swing.SwingConstants;
 import java.awt.Font;
-import javax.swing.ScrollPaneConstants;
-
-import bus.DanhsachHoadon;
-import bus.QuanlyHoadon;
-
-import com.toedter.calendar.JDateChooser;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import model.Chitiethoadon;
+import model.Hoadon;
+import model.Kho;
+import model.Nhacungcap;
+import model.User;
+import model.Vattu;
+import bus.DanhSachChitiethoadon;
+import bus.DanhsachHoadon;
+
+import com.toedter.calendar.JDateChooser;
+
+import dao.HoadonHome;
 
 public class FormNhapKho extends JFrame {
 
@@ -39,24 +47,24 @@ public class FormNhapKho extends JFrame {
 	private JDateChooser dateNgaynhap;
 	private JTextField txtnguoinhan;
 	private JTextField txtsohoadon;
-	private JTextField txtMavt;
-	private JTextField txtdvt;
+	public static JTextField txtMavt;
+	public static JTextField txtdvt;
 	private JTextField txtthue;
 	private JTextField txtghichu;
-	private JTextField txttenvattu;
+	public static JTextField txttenvattu;
 	private JTextField txtsoluong;
-	private JTextField txtdongia;
+	public static JTextField txtdongia;
 	private JTable tbvattu;
 	private JTextField txtsochungtu;
-	private JTextField txtnhacungcap;
-	private JTextField txtkhonhap;
-	private JTextField txtdiachi;
-	private JTextField txtgc;
+	public 	static JTextField txtnhacungcap;
+	public static JTextField txtkhonhap;
+	public static JTextField txtdiachi;
+	private JTextField txthdgc;
 	private JTable tbhoadon;
 	DefaultTableModel modelhoadon= new DefaultTableModel();
 	DefaultTableModel modelvattu= new DefaultTableModel();
 	private HoadonHome homehd=new HoadonHome();
-	private DanhsachHoadon dsHD;
+	
 	private JTextField txtThanhtien;
 	
 	private JComboBox cbloaihd ;
@@ -65,7 +73,13 @@ public class FormNhapKho extends JFrame {
 	
 	private boolean enableBtn = false;
 	
-	QuanlyHoadon qlhd = new QuanlyHoadon();
+	private DanhsachHoadon dsHD = new DanhsachHoadon();
+	private DanhSachChitiethoadon dscthd = new DanhSachChitiethoadon();
+	public static Kho kho;
+	public static Nhacungcap nhacungcap;
+	public static User user;
+	public static Vattu vt;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -90,7 +104,7 @@ public class FormNhapKho extends JFrame {
 	 * 
 	 */
 	public FormNhapKho() {
-		load();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setBounds(100, 100, 720, 487);
 		setSize(813,662);
@@ -158,7 +172,8 @@ public class FormNhapKho extends JFrame {
 		panel_hd.add(txtsohoadon);
 		txtsohoadon.setColumns(10);
 		
-		cbloaihd = new JComboBox();
+		String items[] = {"Tài chính" , "Bán lẻ"};
+		cbloaihd = new JComboBox(items);
 		cbloaihd.setEditable(true);
 		cbloaihd.setBounds(110, 85, 116, 20);
 		panel_hd.add(cbloaihd);
@@ -168,23 +183,47 @@ public class FormNhapKho extends JFrame {
 		cbnguoikt.setBounds(110, 110, 116, 20);
 		panel_hd.add(cbnguoikt);
 		
-		cbthanhtoan = new JComboBox();
+		String itms[] = {"Tiền mặt" , "Chuyển khoản"};
+		cbthanhtoan = new JComboBox(itms);
 		cbthanhtoan.setEditable(true);
 		cbthanhtoan.setBounds(376, 85, 86, 20);
 		panel_hd.add(cbthanhtoan);
 		
 		txtsochungtu = new JTextField();
+		txtsochungtu.setEditable(false);
 		txtsochungtu.setColumns(10);
 		txtsochungtu.setBounds(376, 8, 86, 20);
 		panel_hd.add(txtsochungtu);
 		
 		txtnhacungcap = new JTextField();
+		txtnhacungcap.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2 )
+				{
+					FormNhacungcap fncc = new FormNhacungcap();
+					fncc.setVisible(true);
+					fncc.setAlwaysOnTop(true);
+				}
+			}
+		});
 		txtnhacungcap.setEditable(false);
 		txtnhacungcap.setColumns(10);
 		txtnhacungcap.setBounds(110, 60, 116, 20);
 		panel_hd.add(txtnhacungcap);
 		
 		txtkhonhap = new JTextField();
+		txtkhonhap.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2 )
+				{
+					FormDMKho fKho = new FormDMKho();
+					fKho.setVisible(true);
+					fKho.setAlwaysOnTop(true);
+				}
+			}
+		});
 		txtkhonhap.setEditable(false);
 		txtkhonhap.setColumns(10);
 		txtkhonhap.setBounds(376, 33, 86, 20);
@@ -196,19 +235,36 @@ public class FormNhapKho extends JFrame {
 		txtdiachi.setBounds(376, 60, 86, 20);
 		panel_hd.add(txtdiachi);
 		
-		txtgc = new JTextField();
-		txtgc.setColumns(10);
-		txtgc.setBounds(110, 135, 352, 20);
-		panel_hd.add(txtgc);
+		txthdgc = new JTextField();
+		txthdgc.setColumns(10);
+		txthdgc.setBounds(110, 135, 352, 20);
+		panel_hd.add(txthdgc);
 		
 		dateNgaynhap = new JDateChooser();
 		dateNgaynhap.getCalendarButton().setEnabled(false);
-		dateNgaynhap.setDateFormatString(" dd /MM/yyyy");
+		dateNgaynhap.setDateFormatString(" dd/MM/yyyy");
 		dateNgaynhap.setBounds(110, 8, 116, 20);
 		panel_hd.add(dateNgaynhap);
 		
 		JButton btthemhd = new JButton("Th\u00EAm H\u00F3a \u0110\u01A1n");
-		btthemhd.setEnabled(false);
+		btthemhd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Hoadon hd = getThongtinHoadon();
+				if(dscthd.getCthds().size() != 0)
+				{
+					hd.setChitiethoadons(dscthd.getCthds());
+				}
+				if(dsHD.themHoadon(hd))
+				{
+					JOptionPane.showMessageDialog(null, "Them hoa don thanh cong");
+					themxuongModelHoadon();
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Them hoa don khong thanh cong");
+				}
+			}
+		});
 		btthemhd.setBounds(518, 35, 107, 56);
 		contentPane.add(btthemhd);
 		
@@ -217,6 +273,19 @@ public class FormNhapKho extends JFrame {
 		contentPane.add(btinhoadon);
 		
 		JButton btsuahd = new JButton("S\u1EEDa H\u00F3a \u0110\u01A1n");
+		btsuahd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = tbhoadon.getSelectedRow();
+				if(index != -1)
+				{
+					Hoadon hd = dsHD.getByIndex(index);
+					suathongtinHoadon(hd);
+					suaduoimodel(index,hd);
+					
+				}
+
+			}
+		});
 		btsuahd.setBounds(518, 125, 107, 56);
 		contentPane.add(btsuahd);
 		
@@ -231,13 +300,18 @@ public class FormNhapKho extends JFrame {
 		contentPane.add(scrollPane_hd);
 		
 		tbhoadon = new JTable(modelhoadon);
+		tbhoadon.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbhoadon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				int index = tbhoadon.getSelectedRow();
-				String sct = modelhoadon.getValueAt(index, 1).toString();
-				Hoadon hd = dsHD.getBySochungtu(sct);
-				setForTextBox(hd);
+				if(index != -1)
+				{
+					String sct = modelhoadon.getValueAt(index, 1).toString();
+					Hoadon hd = dsHD.getByIndex(index);
+					setForTextBox(hd);
+					setChitiethoadon(hd);
+				}
 			}
 		});
 		modelhoadon.addColumn("Ngày nhập");
@@ -251,33 +325,61 @@ public class FormNhapKho extends JFrame {
 		modelhoadon.addColumn("User");
 		modelhoadon.addColumn("Người nhận");
 		modelhoadon.addColumn("Ghi chú");
-		for(Hoadon hd: dsHD.getListHD()){
-			Object[] ob={getFormatDate(hd.getNgay()),hd.getSochungtu(),hd.getSohoadon(),hd.getKho(),
-					hd.getNhacungcap(),hd.getDoituong(),hd.getLoaihoadon(),	hd.getThanhtoan(),
-					hd.getUser(),hd.getNguoinhan(),hd.getGhichu()};
-			modelhoadon.addRow(ob);
-		}
+		themxuongModelHoadon();
+		
 		scrollPane_hd.setViewportView(tbhoadon);
 		
 		JButton btthem = new JButton("Th\u00EAm");
 		btthem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int selected = tbhoadon.getSelectedRow();
-				if(selected != -1)
-				{
-					
-				}
+				Chitiethoadon cthd = getChitiethoadon();
+				boolean kt = dscthd.themChitiethoadon(cthd);
+				if(kt)
+					themlentable(cthd);
+				else
+					JOptionPane.showMessageDialog(null, "Chi tiet hoa don da ton tai");
+				
 			}
 		});
 		btthem.setBounds(500, 333, 89, 46);
 		contentPane.add(btthem);
 		
 		JButton btxoa = new JButton("X\u00F3a");
+		btxoa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = tbvattu.getSelectedRow();
+				if(index != -1)
+				{
+					Chitiethoadon cthd = getChitiethoadon();
+					dscthd.xoaCthd(cthd);
+					xoatrangCthd();
+					lammoiTableVattu();
+				}
+				
+			}
+		});
 		btxoa.setBounds(599, 333, 89, 46);
 		contentPane.add(btxoa);
 		
 		JButton btsua = new JButton("S\u1EEDa");
+		btsua.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = tbvattu.getSelectedRow();
+				if(index != -1)
+				{
+					Chitiethoadon cthd = getChitiethoadon();
+					if(dscthd.suaCthd(cthd) == null){
+						JOptionPane.showMessageDialog(null, "Sua khong thanh cong");
+					}
+					else
+					{
+						suaVattutrenTextBox(cthd);
+						suaVattuDuoiModel(index , cthd);
+					}
+				}
+			}
+		});
 		btsua.setBounds(698, 333, 89, 46);
 		contentPane.add(btsua);
 		
@@ -306,7 +408,7 @@ public class FormNhapKho extends JFrame {
 		lbltenvt.setBounds(250, 24, 83, 14);
 		panel_cthd.add(lbltenvt);
 		
-		JLabel lblSLng = new JLabel("s\u1ED1 L\u01B0\u1EE3ng");
+		JLabel lblSLng = new JLabel("Số Lượng");
 		lblSLng.setBounds(250, 49, 46, 14);
 		panel_cthd.add(lblSLng);
 		
@@ -315,6 +417,17 @@ public class FormNhapKho extends JFrame {
 		panel_cthd.add(lbldg);
 		
 		txtMavt = new JTextField();
+		txtMavt.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2 )
+				{
+					FormVattu fvt = new FormVattu();
+					fvt.setVisible(true);
+					fvt.setAlwaysOnTop(true);
+				}
+			}
+		});
 		txtMavt.setEditable(false);
 		txtMavt.setBounds(85, 21, 122, 20);
 		panel_cthd.add(txtMavt);
@@ -358,6 +471,16 @@ public class FormNhapKho extends JFrame {
 		contentPane.add(scrollPane_cthd);
 		
 		tbvattu = new JTable(modelvattu);
+		tbvattu.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = tbvattu.getSelectedRow();
+				if(index != -1)
+				{
+					themDulieuLenTextBoxChitiethoadon(index);
+				}
+			}
+		});
 		modelvattu.addColumn("Số chứng từ");
 		modelvattu.addColumn("Mã vật tư");
 		modelvattu.addColumn("Tên vật tư");
@@ -366,6 +489,7 @@ public class FormNhapKho extends JFrame {
 		modelvattu.addColumn("Đơn giá");
 		modelvattu.addColumn("Thuế");
 		modelvattu.addColumn("Thành tiền");
+		modelvattu.addColumn("Ghi chú");
 		
 		scrollPane_cthd.setViewportView(tbvattu);
 		
@@ -396,39 +520,214 @@ public class FormNhapKho extends JFrame {
 		contentPane.add(txtThanhtien);
 		txtThanhtien.setColumns(10);
 		
+		setSochungtu();
+		setNgaynhap();
+		setNguoikiemtra();
+	}
+	
+
+	protected void suaduoimodel(int index, Hoadon hd) {
+		String loaihd = hd.getLoaihoadon();
+		String thanhtoan = hd.getThanhtoan();
+		String nguoinhan = hd.getNguoinhan();
+		modelhoadon.setValueAt(loaihd, index, 6);
+		modelhoadon.setValueAt(thanhtoan, index, 7);
+		modelhoadon.setValueAt(nguoinhan, index, 9);
+	}
+
+	protected void suathongtinHoadon(Hoadon hd) {
+		hd.setLoaihoadon(cbloaihd.getSelectedItem().toString());
+		hd.setThanhtoan(cbthanhtoan.getSelectedItem().toString());
+		//hd.setUser(user) test truoc da
+		String nguoinhan = txtnguoinhan.getText();
+		if(!nguoinhan.isEmpty()){
+			hd.setNguoinhan(nguoinhan);
+		}
+	}
+
+	private void themxuongModelHoadon() {
+		modelhoadon.setRowCount(0);
+		for(Hoadon hd: dsHD.getListHD()){
+			Object[] ob={getFormatDate(hd.getNgay()),hd.getSochungtu(),hd.getSohoadon(),hd.getKho(),
+					hd.getNhacungcap(),hd.getDoituong(),hd.getLoaihoadon(),	hd.getThanhtoan(),
+					hd.getUser(),hd.getNguoinhan(),hd.getGhichu()};
+			modelhoadon.addRow(ob);
+		}
+	}
+
+	protected void suaVattuDuoiModel(int index, Chitiethoadon cthd) {
+		int sl = cthd.getSoluong();
+		float thue = cthd.getThue();
+		double thanhtien = cthd.getThanhtien();
+		modelvattu.setValueAt(String.valueOf(sl), index, 4);
+		modelvattu.setValueAt(String.valueOf(thue), index, 6);
+		modelvattu.setValueAt(String.valueOf(thanhtien), index, 7);
 		
 	}
+
+	protected void suaVattutrenTextBox(Chitiethoadon cthd) {
+		
+	}
+
+	protected void themDulieuLenTextBoxChitiethoadon(int index) {
+		String mavattu = modelvattu.getValueAt(index, 1).toString();
+		Chitiethoadon cthd = dscthd.timCthd(mavattu);
+		vt = cthd.getVattu();
+		txtMavt.setText(vt.getMavattu());
+		txttenvattu.setText(vt.getTenvattu());
+		txtdvt.setText(vt.getDonvitinh());
+		txtdongia.setText(String.valueOf(vt.getDongia()));
+		txtsoluong.setText(String.valueOf(cthd.getSoluong()));
+		txtthue.setText(String.valueOf(cthd.getThue()));
+//		txtghichu.setText(cthd.getGhichu());
+	}
+
+	protected void lammoiTableVattu() {
+		modelvattu.setRowCount(0);
+		for(Iterator<Chitiethoadon> it = dscthd.getCthds().iterator() ; it.hasNext() ; )
+		{
+			Chitiethoadon cthd = it.next();
+			themlentable(cthd);
+		}
+	}
+
+	protected void xoatrangCthd() {
+		txtMavt.setText("");
+		txttenvattu.setText("");
+		txtdongia.setText("");
+		txtdvt.setText("");
+		txtsoluong.setText("");
+		txtthue.setText("");
+		txtghichu.setText("");
+	}
+
+	protected void themlentable(Chitiethoadon cthd) {
+		Object[] ob = {txtsochungtu.getText(), cthd.getVattu().getMavattu() , cthd.getVattu().getTenvattu() , cthd.getVattu().getDonvitinh() ,cthd.getVattu().getDongia() , cthd.getSoluong() , 
+				cthd.getThue() , getThanhtien(cthd.getSoluong(), cthd.getVattu().getDongia(), cthd.getThue()) ,""};
+		modelvattu.addRow(ob);
+	}
+
+	protected Chitiethoadon getChitiethoadon() {
+		Chitiethoadon cthd = new Chitiethoadon();
+		
+		cthd.setVattu(vt);
+		int sl = Integer.parseInt(txtsoluong.getText());
+		cthd.setSoluong(sl);
+		float thue = Float.parseFloat(txtthue.getText());
+		cthd.setThue(thue);
+		double thanhtien = Double.parseDouble(getThanhtien(sl, vt.getDongia(), thue));
+		cthd.setThanhtien(thanhtien);
+		return cthd;
+	}
+
+	private void setNguoikiemtra() {
+		user = new User("user01", "tocdai", "12345");
+		cbnguoikt.setSelectedItem(user.getUser());
+	}
+
+	protected Hoadon getThongtinHoadon() {
+		Hoadon hd = new Hoadon();
+		
+		hd.setNgay(dateNgaynhap.getDate());
+		hd.setSochungtu(txtsochungtu.getText());
+		String sohd = txtsohoadon.getText();
+		if(!sohd.isEmpty())
+			hd.setSohoadon(Integer.parseInt(sohd));
+		String tenkho = txtkhonhap.getText();
+		if(!tenkho.isEmpty())
+			hd.setKho(kho);
+		String ncc = txtnhacungcap.getText();
+		if(!ncc.isEmpty())
+			hd.setNhacungcap(nhacungcap);
+		hd.setLoaihoadon(cbloaihd.getSelectedItem().toString());
+		hd.setThanhtoan(cbthanhtoan.getSelectedItem().toString());
+		//hd.setUser(user); test truoc da
+		String nguoinhan = txtnguoinhan.getText();
+		if(!nguoinhan.isEmpty()){
+			hd.setNguoinhan(nguoinhan);
+		}
+		// con ghi chu 
+		return hd;
+	}
+
+	private void setNgaynhap() {
+		dateNgaynhap.setDate(new Date());
+	}
+
+	private void setSochungtu() {
+		if(dsHD.getListHD().isEmpty())
+		{
+			txtsochungtu.setText("1/NK");
+		}
+		else
+		{
+			int size = dsHD.getListHD().size();
+			String sct = String.valueOf(size + 1 ) + "/NK";
+			txtsochungtu.setText(sct.toString());
+		}
+	}
+
+	protected void setChitiethoadon(Hoadon hd) {
+		modelvattu.setRowCount(0);
+		Set<Chitiethoadon> chitiethds =  hd.getChitiethoadons();
+		
+		for(Iterator<Chitiethoadon> it = chitiethds.iterator(); it.hasNext() ;)
+		{
+			Chitiethoadon cthd = it.next();
+			Object[] ob = {hd.getSochungtu() ,
+					cthd.getVattu().getMavattu() ,
+					cthd.getVattu().getTenvattu() , 
+					cthd.getVattu().getDonvitinh() ,cthd.getSoluong() ,cthd.getVattu().getDongia(),
+					cthd.getThue(),getThanhtien(cthd.getSoluong(),cthd.getVattu().getDongia() ,cthd.getThue())};
+			modelvattu.addRow(ob);
+		}
+		// set danh sach chi tiet hoa don lay trong 1 hoa don
+		dscthd.setCthds(chitiethds);
+	}
+		
+	private String getThanhtien(int soluong, double dongia, float thue) {
+		double thanhtien = soluong * dongia + (soluong * dongia) * thue / 100;
+		return String.valueOf(thanhtien);
+	}
+
 	
 
 	protected void setForTextBox(Hoadon hd) {
 		try {
+			lammoitthongtin();
 			dateNgaynhap.setDate(hd.getNgay());
 			txtsochungtu.setText(hd.getSochungtu());
-			if(hd.getSohoadon() == null )
-			{
-				txtsohoadon.setText("");
-			}
-			else
-			{
+			if(hd.getSohoadon() != null )
 				txtsohoadon.setText(Integer.toString(hd.getSohoadon()));
-			}
 			txtkhonhap.setText(hd.getKho().toString());
 			txtnhacungcap.setText(hd.getNhacungcap().toString());
 			txtdiachi.setText(hd.getNhacungcap().toString());
 			cbloaihd.setSelectedItem(hd.getLoaihoadon());
 			cbthanhtoan.setSelectedItem(hd.getThanhtoan());
 			cbnguoikt.setSelectedItem(hd.getUser().toString());
+			if(hd.getNguoinhan() != null)
+				txtnguoinhan.setText(hd.getNguoinhan());
+			if(hd.getGhichu() !=null)
+				txthdgc.setText(hd.getGhichu());
 		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
 			
 		}
-		
-	}
-
-	private void load(){
-		dsHD= new DanhsachHoadon( homehd.findByExample());
 	}
 	
+	private void lammoitthongtin() {
+		dateNgaynhap.setDate(new Date());
+		txtsochungtu.setText("");
+		txtsohoadon.setText("");
+		txtkhonhap.setText("");
+		txtnhacungcap.setText("");
+		txtdiachi.setText("");
+		cbloaihd.setSelectedItem("");
+		cbthanhtoan.setSelectedItem("");
+		cbnguoikt.setSelectedItem("");
+		txtnguoinhan.setText("");
+		txthdgc.setText("");
+	}
+
 	public String getFormatDate(Date d)
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

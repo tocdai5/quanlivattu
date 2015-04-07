@@ -1,4 +1,4 @@
-package bus;
+package quanly;
 
 import java.util.List;
 
@@ -37,6 +37,11 @@ public class QuanlyHoadon {
 		if(hd != null)
 			return hd;
 		return null;
+	}
+	
+	public void themHoadon(Hoadon hd)
+	{
+		hdhome.attachDirty(hd);
 	}
 	
 

@@ -185,7 +185,8 @@ public class Hoadon implements java.io.Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((sochungtu == null) ? 0 : sochungtu.hashCode());
 		return result;
 	}
 
@@ -198,13 +199,14 @@ public class Hoadon implements java.io.Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Hoadon other = (Hoadon) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (sochungtu == null) {
+			if (other.sochungtu != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!sochungtu.equals(other.sochungtu))
 			return false;
 		return true;
 	}
+
 	
 	
 

@@ -8,11 +8,11 @@
             <column name="ID" />
             <generator class="identity" />
         </id>
-        <many-to-one name="vattu" class="model.Vattu" fetch="select">
+        <many-to-one name="vattu" class="model.Vattu" fetch="join">
             <column name="Mavattu" not-null="true" />
         </many-to-one>
         <many-to-one name="hoadon" class="model.Hoadon" fetch="select">
-            <column name="Sochungtu" not-null="true" />
+            <column name="Sochungtu"  />
         </many-to-one>
         <property name="soluong" type="int">
             <column name="Soluong" not-null="true" />

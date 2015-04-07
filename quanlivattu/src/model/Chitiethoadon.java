@@ -97,7 +97,7 @@ public class Chitiethoadon implements java.io.Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((vattu == null) ? 0 : vattu.hashCode());
 		return result;
 	}
 
@@ -110,14 +110,17 @@ public class Chitiethoadon implements java.io.Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Chitiethoadon other = (Chitiethoadon) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (vattu == null) {
+			if (other.vattu != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!vattu.getMavattu().equals(other.vattu.getMavattu()))
 			return false;
 		return true;
 	}
 
+	
+
+	
 	
 	
 }
